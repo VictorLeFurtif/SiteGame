@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <title>FromSoftWare - Profil</title>
+    <meta name="description" content="Profil utilisateur - FromSoftWare">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="stylesheet" type="text/css" href="StoreAndAccoutStyle.css">
+    <script src="https://kit.fontawesome.com/92887ba99c.js" crossorigin="anonymous"></script>
+</head>
+<body>
+<div id="MainDivAccount">
+    <div id="Partie1A">
+
+        <div id="ProfileSection">
+            <img id="ProfilePicture" src="" alt="Photo de profil">
+            <h2 id="UserName">Nom d'utilisateur</h2>
+            <div id="ProfileButtons">
+                <button class="ProfileButton" id="PanierButton" onclick="showContent('panier')"><i
+                        class="fas fa-shopping-cart"></i> Panier
+                </button>
+                <button class="ProfileButton" id="DeconnexionButton" onclick="showContent('deconnexion')"><i
+                        class="fas fa-sign-out-alt"></i> Déconnexion
+                </button>
+                <button class="ProfileButton" id="InformationsButton" onclick="showContent('informations')"><i
+                        class="fas fa-info-circle"></i> Informations
+                </button>
+                <button class="ProfileButton" id="HistoriqueButton" onclick="showContent('historique')"><i
+                        class="fas fa-history"></i> Historique d'achat
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <div id="Partie2A">
+
+        <div id="DynamicContent">
+            <h1>Bienvenue sur votre espace personnel</h1>
+            <p>Utilisez les boutons à gauche pour naviguer entre vos options.</p>
+        </div>
+    </div>
+    <form action="SiteGame.html">
+        <button id="BackToMenuButton">
+            <i class="fas fa-arrow-left"></i> Retour au menu
+        </button>
+    </form>
+</div>
+
+<script>
+
+
+    function showContent(section) {
+        const content = document.getElementById('DynamicContent');
+        const actualId = sessionStorage.getItem("idClient");
+
+        if (!actualId) {
+            console.error("ID client non trouvé dans le cache.");
+            return;
+        }
+
+        if (section === 'panier') {
+
+            fetch("https://5uyedmdhz3.execute-api.eu-north-1.amazonaws.com/ClientAPI/clients?nomAuteur=Victor")
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Erreur réseau ou API');
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    const clientData = data.body.find(item => item.idClient === actualId);
+
+                    if (clientData && clientData.produits) {
+                        const productTitles = clientData.produits.map(product => product.titre);
+                        const titlesHTML = productTitles.map(title => `<li>${title}</li>`).join(" -");
+
+                        content.innerHTML = `
+                    <h1>Votre Panier</h1>
+                    <ul>${titlesHTML}</ul>
+                    <button id="PayButton" onclick="processPayment(); clearCart()">Payer</button>
+                    <p id="argent">Argent</p>
+                `;
+                    } else {
+                        content.innerHTML = `
+                    <h1>Votre Panier</h1>
+                    <p>Aucun produit trouvé dans le panier.</p>
+                `;
+                    }
+                })
+                .catch(error => {
+                    console.error('Erreur lors de la récupération des données:', error);
+                    content.innerHTML = `
+                <h1>Votre Panier</h1>
+                <p>Erreur lors de la récupération des produits.</p>
+            `;
+                });
+            fetch("https://5uyedmdhz3.execute-api.eu-north-1.amazonaws.com/ClientAPI/clients?nomAuteur=Victor")
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Erreur réseau ou API');
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    const clientData = data.body.find(item => item.idClient === actualId);
+
+                    if (clientData && clientData.produits) {
+                        // Récupérer les prix des produits et les convertir en int
+                        const prices = clientData.produits.map(product => parseInt(product.prix, 10));
+                        const total = prices.reduce((acc, price) => acc + price, 0);
+                        const printTotal = document.getElementById("argent");
+                        printTotal.innerText = "Le montant total à payer est : " + total + " €";
+
+                    }
+                })
+        } else if (section === 'deconnexion') {
+            content.innerHTML = `
+            <h1>Déconnexion</h1>
+        `;
+            sessionStorage.setItem("idClient", null);
+        } else if (section === 'informations') {
+            content.innerHTML = `
+                <h1>Vos Informations</h1>
+                <p>Voici vos informations personnelles.</p>
+                <p id="info"></p>
+            `;
+            const actualId = sessionStorage.getItem("idClient");
+            fetch("https://5uyedmdhz3.execute-api.eu-north-1.amazonaws.com/ClientAPI/clients?nomAuteur=Victor")
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Erreur réseau ou API');
+                    }
+                    return response.json();
+                })
+
+                .then(data => {
+                    const clientData = data.body.find(item => item.idClient === actualId);
+                    const everyInfo = "Prenom : " + clientData.prenom + '\n' + "Nom : " + clientData.nom + '\n' + "Email : " + clientData.mail;
+                    const InfoText = document.getElementById("info");
+                    InfoText.innerText = everyInfo;
+                    const panierData = clientData.produits.titre;
+                    const PanierText = document.getElementById("panier");
+                    PanierText.innerText = panierData;
+                })
+
+
+        } else if (section === 'historique') {
+            content.innerHTML = `
+            <h1>Historique d'achat</h1>
+            <p>Voici l'historique de vos achats passés.</p>
+        `;
+        }
+    }
+
+    function processPayment() {
+        const actualId = sessionStorage.getItem("idClient");
+        if (!actualId) {
+            alert("Impossible de procéder au paiement. ID client non trouvé.");
+            return;
+        }
+
+        fetch("https://5uyedmdhz3.execute-api.eu-north-1.amazonaws.com/ClientAPI/clients?nomAuteur=Victor")
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Erreur réseau ou API');
+                }
+                return response.json();
+            })
+            .then(data => {
+                const clientData = data.body.find(item => item.idClient === actualId);
+
+                if (clientData && clientData.produits) {
+
+                    const prices = clientData.produits.map(product => parseInt(product.prix, 10));
+                    const total = prices.reduce((acc, price) => acc + price, 0);
+
+
+                    alert(`Votre payement c'est bien déroulé`);
+                    console.log(`Total calculé : ${total} €`);
+
+
+                } else {
+                    alert("Aucun produit trouvé dans votre panier.");
+                }
+            })
+            .catch(error => {
+                console.error('Erreur lors de la récupération des données:', error);
+                alert("Erreur lors du traitement de votre paiement. Veuillez réessayer.");
+            });
+    }
+
+    window.addEventListener("load", (event) => {
+        const actualId = sessionStorage.getItem("idClient");
+
+        if (!actualId) {
+            console.error("ID client non trouvé dans le cache.");
+            return;
+        }
+
+        fetch("https://5uyedmdhz3.execute-api.eu-north-1.amazonaws.com/ClientAPI/clients?nomAuteur=Victor")
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Erreur réseau ou API');
+                }
+                return response.json();
+            })
+            .then(data => {
+
+                const clientData = data.body.find(item => item.idClient === actualId);
+
+                if (clientData && clientData.urlPhoto) {
+                    const accountUsername = clientData.prenom;
+                    const url = clientData.urlPhoto;
+                    console.log("URL de la photo trouvée :", url);
+                    const profilePicture = document.getElementById("ProfilePicture");
+                    profilePicture.src = url;
+                    const UsernamePageAccount = document.getElementById("UserName");
+                    UsernamePageAccount.innerText = accountUsername;
+
+
+                } else {
+                    console.error("URL de la photo introuvable pour cet ID client.");
+                }
+            })
+
+            .catch(error => {
+                console.error('Erreur lors de la récupération des données:', error);
+            });
+    })
+   
+    function clearCart(idPorduit) {
+       
+        const produits = [
+            { idProduit: "18" },
+            { idProduit: "21" },
+            { idProduit: "20" },
+            
+        ];
+        const actualId = sessionStorage.getItem("idClient");
+        if (!actualId) {
+            alert("Impossible de vider le panier. ID client non trouvé.");
+            return;
+        }
+        
+        produits.forEach((produit) => {
+            const url = `https://5uyedmdhz3.execute-api.eu-north-1.amazonaws.com/ClientAPI/clients/${actualId}/produits/${produit.idProduit}?nomAuteur=Victor`;
+
+            fetch(url, {
+                method: "DELETE",
+            })
+                .then((response) => {
+                    if (!response.ok) {
+                        throw new Error(`Erreur : ${response.status}`);
+                    }
+                    console.log(`Produit ${produit.idProduit} supprimé avec succès.`);
+                })
+                .catch((error) => {
+                    console.error(`Erreur lors de la suppression du produit ${produit.idProduit} :`, error);
+                });
+        });
+
+        alert("Tous les produits du panier ont été supprimés !");
+    }
+    
+
+
+</script>
+</body>
+</html>

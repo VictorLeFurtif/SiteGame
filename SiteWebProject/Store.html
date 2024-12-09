@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <title>FromSoftWare - Store</title>
+    <meta name="description" content="Store Page">
+    <link rel="stylesheet" type="text/css" href="StoreAndAccoutStyle.css">
+</head>
+<body>
+<div id="MainDivStore">
+    <header id="StoreHeader">
+        <h1 id="StoreTitle">Bienvenue dans la boutique FromSoftware</h1>
+    </header>
+
+    <section id="Partie2S">
+        <div class="Article" id="Article1">
+            <img id="Article1Image" src="./imgFolder/GameDS3.jpg" alt="Article 1">
+            <h2 id="Article1Title">Dark Souls 3 : 50€</h2>
+            <p id="Article1Desc">Un jeu fantastique pour les fans de RPG.</p>
+            <button id="Article1Cart" onclick="AddToCartjeux()" class="ButtonCart">Ajouter au panier</button>
+        </div>
+
+        <div class="Article" id="Article2">
+            <img id="Article2Image" src="./imgFolder/figurine.jpg" alt="Article 2">
+            <h2 id="Article2Title">Figurine Collector : 150€</h2>
+            <p id="Article2Desc">Découvrez des mondes incroyables avec cette figurine.</p>
+            <button id="Article2Cart" onclick="AddToCartFigurine()" class="ButtonCart">Ajouter au panier</button>
+        </div>
+
+        <div class="Article" id="Article3">
+            <img id="Article3Image" src="./imgFolder/SignatureCreatuer.png" alt="Article 3">
+            <h2 id="Article3Title">Signature : 400€</h2>
+            <p id="Article3Desc">Réaliser votre rêve en vous offrant la SIGNATURE!!.</p>
+            <button id="Article3Cart" onclick="AddToCartSignature()" class="ButtonCart">Ajouter au panier</button>
+        </div>
+    </section>
+    <form action="SiteGame.html">
+        <button id="BackToMenuButton">
+            <i class="fas fa-arrow-left"></i> Retour au menu
+        </button>
+    </form>
+</div>
+<script>
+    window.addEventListener("load", () => {
+        const actualId = sessionStorage.getItem("idClient");
+
+        if (!actualId) {
+            console.error("ID client non trouvé dans le cache.");
+        }
+        console.log(actualId)
+    });
+
+    function AddToCartSignature() {
+        const actualId = sessionStorage.getItem("idClient");
+        fetch(`https://5uyedmdhz3.execute-api.eu-north-1.amazonaws.com/ClientAPI/clients/${actualId}/produits?nomAuteur=Victor`, {
+            method: "POST",
+            headers: {"Content-Type": "application/json"},
+            body: JSON.stringify({
+                "idProduit": "18"
+            })
+        })
+            .then(response => {
+                if (response.ok) {
+                    alert('Produit ajouté au panier !');
+                } else {
+                    response.json().then(err => {
+                        console.error("Erreur de réponse:", err);
+                        alert('Erreur : ' + (err.message || 'Produit non ajouté.'));
+                    });
+                }
+            })
+            .catch(error => {
+                console.error("Erreur lors de l'ajout au panier:", error);
+                alert('Erreur : ' + (error.message || 'Panier indisponible.'));
+            });
+    }
+
+    function AddToCartjeux() {
+        const actualId = sessionStorage.getItem("idClient");
+        fetch(`https://5uyedmdhz3.execute-api.eu-north-1.amazonaws.com/ClientAPI/clients/${actualId}/produits?nomAuteur=Victor`, {
+            method: "POST",
+            headers: {"Content-Type": "application/json"},
+            body: JSON.stringify({
+                "idProduit": "20"
+            })
+        })
+            .then(response => {
+                if (response.ok) {
+                    alert('Produit ajouté au panier !');
+                } else {
+                    response.json().then(err => {
+                        console.error("Erreur de réponse:", err);
+                        alert('Erreur : ' + (err.message || 'Produit non ajouté.'));
+                    });
+                }
+            })
+            .catch(error => {
+                console.error("Erreur lors de l'ajout au panier:", error);
+                alert('Erreur : ' + (error.message || 'Panier indisponible.'));
+            });
+    }
+
+    function AddToCartFigurine() {
+        const actualId = sessionStorage.getItem("idClient");
+        fetch(`https://5uyedmdhz3.execute-api.eu-north-1.amazonaws.com/ClientAPI/clients/${actualId}/produits?nomAuteur=Victor`, {
+            method: "POST",
+            headers: {"Content-Type": "application/json"},
+            body: JSON.stringify({
+                "idProduit": "21"
+            })
+        })
+            .then(response => {
+                if (response.ok) {
+                    alert('Produit ajouté au panier !');
+                } else {
+                    response.json().then(err => {
+                        console.error("Erreur de réponse:", err);
+                        alert('Erreur : ' + (err.message || 'Produit non ajouté.'));
+                    });
+                }
+            })
+            .catch(error => {
+                console.error("Erreur lors de l'ajout au panier:", error);
+                alert('Erreur : ' + (error.message || 'Panier indisponible.'));
+            });
+    }
+    
+</script>
+</body>
+
+
+</html>

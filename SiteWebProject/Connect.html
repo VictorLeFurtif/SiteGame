@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <title>FromSoftWare - Connexion</title>
+    <meta name="description" content="Video game development company">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="stylesheet" type="text/css" href="StyleConnect.css">
+    <script src="https://kit.fontawesome.com/92887ba99c.js" crossorigin="anonymous"></script>
+</head>
+<body>
+<div id="MainDiv">
+    <div id="LoginContainer">
+        <h1 id="LoginTitle">Se Connecter</h1>
+
+        <div class="InputContainer">
+            <label for="email">Email</label>
+            <input type="email" id="email" name="email" placeholder="Votre email" required>
+        </div>
+        <div class="InputContainer">
+            <label for="password">Mot de Passe</label>
+            <input type="password" id="password" name="password" placeholder="Votre mot de passe" required>
+        </div>
+        <button onclick="ConnectToAccount()" id="LoginButton" class="Button">Se Connecter</button>
+    </div>
+    <form action="SiteGame.html">
+        <button id="BackToMenuButton">
+            <i class="fas fa-arrow-left"></i> Retour au menu
+        </button>
+    </form>
+</div>
+<script>
+    function GetId() {
+        const email = document.getElementById("email").value.trim().toLowerCase();
+
+        return fetch("https://5uyedmdhz3.execute-api.eu-north-1.amazonaws.com/ClientAPI/clients?nomAuteur=Victor")
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Erreur réseau ou API');
+                }
+                return response.json();
+            })
+            .then(data => {
+                console.log('Réponse API:', data);
+
+                const filteredItems = data.body.filter(item =>
+                    item.mail && typeof item.mail === 'string' && item.mail.trim().toLowerCase() === email
+                );
+
+                const ids = filteredItems.map(item => item.idClient);
+                console.log('IDs trouvés:', ids);
+
+                return ids.length > 0 ? ids[0] : null;
+            })
+            .catch(error => {
+                console.error('Erreur lors de la récupération des données:', error);
+                return null;
+            });
+    }
+
+    function ConnectToAccount() {
+        GetId()
+            .then(newId => {
+                if (newId) {
+                    sessionStorage.setItem('idClient', newId);
+                    console.log('ID client enregistré :', newId);
+                } else {
+                    console.log('Aucun compte trouvé avec cet email.');
+                }
+            })
+            .catch(error => {
+                console.error('Erreur lors de la tentative de connexion:', error);
+            });
+    }
+</script>
+</body>
+</html>

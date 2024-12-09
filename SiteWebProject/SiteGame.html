@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <title>FromSoftWare</title>
+    <meta name="description" content="Video game development company">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="stylesheet" type="text/css" href="Style.css">
+    <script src="https://kit.fontawesome.com/92887ba99c.js" crossorigin="anonymous"></script>
+</head>
+<body>
+<div id="MainDiv">
+    <div id="Partie1">
+        <img id="ImageFSF"
+             src="./imgFolder/FromSoftware_logo_black_background.jpg"
+             alt="Logo FromSoftware">
+    </div>
+    <div id="Partie2">
+        <div id="ImageDS3Div">
+            <img id="ImageDS3"
+                 src="./imgFolder/b18861767b939c6e79ed8733362f60cd.jpg"
+                 alt="Image DS3">
+            <img id="ImageNameDS3"
+                 src="./imgFolder/dark-souls-i-i-i-game-logo-7to27jm1p3vkmy1q-7to27jm1p3vkmy1q.png"
+                 alt="Logo Dark Souls III">
+        </div>
+        <div id="Blk1"></div>
+        <div id="Blk2"></div>
+    </div>
+    <div id="Partie3">
+        <div id="MenuDeroul" class="box">
+            <form action="ContactUs.html">
+                <button id="ButtonContact">Contact Us</button>
+            </form>
+            <form action="GuestBook.html">
+                <button id="ButtonGuestBook">Guest Book</button>
+            </form>
+            <form action="Account.html">
+                <button id="ButtonProfile">Profile</button>
+            </form>
+            <form action="Store.html">
+                <button id="ButtonStore">Store</button>
+            </form>
+            <form action="Connect.html">
+                <button id="ButtonConnect">Connect</button>
+            </form>
+            <form action="CreateAccount.html">
+                <button id="ButtonCreateAccount">Create Account</button>
+            </form>
+        </div>
+        <button id="ButtonMenu"><i id="ButtonMenuUI" class="fa-solid fa-bars"></i></button>
+    </div>
+</div>
+
+<script>
+    let rotation = 0;
+    let isMenuVisible = false;
+    const ButtonMenuUI = document.querySelector("#ButtonMenuUI");
+    const MenuDeroul = document.querySelector("#MenuDeroul");
+
+    ButtonMenuUI.addEventListener('click', () => {
+        rotation += 90;
+        ButtonMenuUI.style.transform = `rotate(${rotation}deg)`;
+
+        if (isMenuVisible) {
+            MenuDeroul.style.opacity = "0";
+        } else {
+            MenuDeroul.style.opacity = "1";
+        }
+
+        isMenuVisible = !isMenuVisible;
+    });
+</script>
+</body>
+</html>

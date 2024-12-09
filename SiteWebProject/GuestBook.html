@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <title>FromSoftWare - Guest Book</title>
+    <meta name="description" content="Video game development company">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="stylesheet" type="text/css" href="StyleGB.css">
+    <script src="https://kit.fontawesome.com/92887ba99c.js" crossorigin="anonymous"></script>
+</head>
+<body>
+<div id="MainDiv">
+    <div id="Partie1">
+        <form action="SiteGame.html">
+            <button id="Menu">
+                <i class="fa-solid fa-house"></i>
+            </button>
+        </form>
+        <div class="guestBook">
+            <h1>Guest Book</h1>
+            <p>Share your opinion with the world here!</p>
+            <div id="Name" class="groupePourEspacer">
+                <label for="nom">Votre nom</label>
+                <input type="text" id="nom" name="nom" placeholder="Martin" required>
+            </div>
+            <div id="opinion" class="groupePourEspacer">
+                <label for="message">Votre message</label>
+                <textarea id="message" name="message" placeholder="Bonjour, je vous contacte car...."
+                          required></textarea>
+            </div>
+            <div id="Share" class="groupePourEspacer">
+                <button id="submit">Envoyer mon message</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="Partie2">
+        
+        
+    </div>
+</div>
+<script>
+    
+    const ButtonShare = document.querySelector("#Share");
+    ButtonShare.addEventListener('click', () => {
+        
+        const boxBeauty = document.createElement("div")
+        boxBeauty.classList.add("magnifique-box")
+        const Partie2js = document.getElementById("Partie2")
+        const elementName = document.getElementById("nom").value;
+        const elementOpinion = document.getElementById("message").value;
+        const nameData = document.createElement("p");
+        const opinionData = document.createElement("p")
+        nameData.innerText = elementName;
+        opinionData.innerText = elementOpinion
+        console.log(nameData)
+        console.log(opinionData)
+        boxBeauty.appendChild(nameData)
+        boxBeauty.appendChild(opinionData)
+        Partie2js.appendChild(boxBeauty)
+        
+    });
+
+</script>
+</body>
+</html>
